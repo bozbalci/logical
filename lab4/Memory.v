@@ -33,47 +33,47 @@ begin
     /* Unless we check for (Rd || Wr), if neither is set,
     * Rdy is set to 0 and stays 0 forever.
     */
-   if (Enable && Rdy && (Rd || Wr)) begin
-       #Td Rdy = 0;
+    if (Enable && Rdy && (Rd || Wr)) begin
+        #Td Rdy = 0;
 
-       if (Rd) begin
-           if (Length == 0) begin
-               /* Read a single byte. */
+        if (Rd) begin
+            if (Length == 0) begin
+                /* Read a single byte. */
 
-               #(Tmem - Td) DataOut = {24'b0, Mem[Addr]};
-       end else begin
-           /* Read a word. */
+                #(Tmem - Td) DataOut = {24'b0, Mem[Addr]};
+            end else begin
+                /* Read a word. */
 
-           #(Tmem - Td) DataOut = {
-               Mem[{Addr[23:2], 2'b11}],
-               Mem[{Addr[23:2], 2'b10}],
-               Mem[{Addr[23:2], 2'b01}],
-               Mem[{Addr[23:2], 2'b00}]
-               };
-           end
+                #(Tmem - Td) DataOut = {
+                    Mem[{Addr[23:2], 2'b11}],
+                    Mem[{Addr[23:2], 2'b10}],
+                    Mem[{Addr[23:2], 2'b01}],
+                    Mem[{Addr[23:2], 2'b00}]
+                    };
+                end
 
-           Rdy = 1;
-       end
+                Rdy = 1;
+            end
 
-       if (Wr) begin
-           if (Length == 0) begin
-               /* Write a single byte. */
+            if (Wr) begin
+                if (Length == 0) begin
+                    /* Write a single byte. */
 
-               #(Tmem - Td) Mem[Addr] = DataIn[7:0];
-           end else begin
-               /* Write a word. */
+                    #(Tmem - Td) Mem[Addr] = DataIn[7:0];
+                end else begin
+                    /* Write a word. */
 
-               #(Tmem - Td)
+                    #(Tmem - Td)
 
-               Mem[{Addr[23:2], 2'b00}] <= DataIn[7:0];
-               Mem[{Addr[23:2], 2'b01}] <= DataIn[15:8];
-               Mem[{Addr[23:2], 2'b10}] <= DataIn[23:16];
-               Mem[{Addr[23:2], 2'b11}] <= DataIn[31:24];
-           end
+                    Mem[{Addr[23:2], 2'b00}] <= DataIn[7:0];
+                    Mem[{Addr[23:2], 2'b01}] <= DataIn[15:8];
+                    Mem[{Addr[23:2], 2'b10}] <= DataIn[23:16];
+                    Mem[{Addr[23:2], 2'b11}] <= DataIn[31:24];
+                end
 
-           Rdy = 1;
-       end
-   end
-end
+                Rdy = 1;
+            end
+        end
+    end
 
-endmodule
+    endmodule
