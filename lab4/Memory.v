@@ -27,10 +27,13 @@ end
 * 2^24 words, each of them 8-bits wide. */
 reg [7:0] Mem [0:'h00FFFFFF];
 
-always @(posedge Wr, posedge Rd)
+always @(posedge Wr, posedge Rd, posedge Enable)
 begin
 
-   if (Enable && Rdy) begin
+    /* Unless we check for (Rd || Wr), if neither is set,
+    * Rdy is set to 0 and stays 0 forever.
+    */
+   if (Enable && Rdy && (Rd || Wr)) begin
        #Td Rdy = 0;
 
        if (Rd) begin
