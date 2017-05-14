@@ -23,7 +23,7 @@ integer i;
 
 always @(posedge Clk, posedge Reset, AddrA, AddrB) begin
     if (Reset) begin
-        for (i = 0; i < i; i = i + 1) begin
+        for (i = 0; i < 32; i = i + 1) begin
             Reg[i] = 32'b0;
         end
     end
